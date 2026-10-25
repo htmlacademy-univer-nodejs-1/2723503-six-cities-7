@@ -1,0 +1,72 @@
+{
+  "api": {
+    "titles": [
+      "Sunny loft near the old town square",
+      "Cozy canal-side room with a bike",
+      "Spacious family house with a garden",
+      "Boutique hotel room in the city center",
+      "Minimalist studio next to the cathedral",
+      "Penthouse apartment with a rooftop terrace",
+      "Quiet room in a historic townhouse"
+    ],
+    "descriptions": [
+      "Bright two-level loft with big windows and a small balcony. Ten minutes on foot to the main sights, quiet courtyard.",
+      "Small but warm room in a classic house right by the canal. Shared kitchen and bikes for rent downstairs.",
+      "Three bedrooms, a fireplace and a private garden with a barbecue. Perfect for a long stay with kids.",
+      "Elegant room with a king-size bed, room service and a rich breakfast buffet included in the price.",
+      "Compact studio with everything you need for a short trip: fast Wi-Fi, a kitchenette and a rain shower.",
+      "Top-floor apartment with panoramic views of the city, a hot tub on the terrace and a home cinema.",
+      "Calm and tidy room on the second floor of a 19th-century building, surrounded by cafes and galleries."
+    ],
+    "previewImages": [
+      "https://16.design.htmlacademy.pro/static/hotel/1.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/3.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/5.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/9.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/12.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/17.jpg"
+    ],
+    "photos": [
+      "https://16.design.htmlacademy.pro/static/hotel/2.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/4.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/6.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/7.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/8.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/10.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/11.jpg",
+      "https://16.design.htmlacademy.pro/static/hotel/13.jpg"
+    ],
+    "users": [
+      {
+        "name": "Margo",
+        "email": "margo.dubois@example.com",
+        "avatarUrl": "https://16.design.htmlacademy.pro/static/avatar/4.jpg",
+        "password": "margo2026"
+      },
+      {
+        "name": "Joost",
+        "email": "joost.vd@example.com",
+        "avatarUrl": "",
+        "password": "canal42"
+      },
+      {
+        "name": "Lena",
+        "email": "lena.weber@example.com",
+        "avatarUrl": "https://16.design.htmlacademy.pro/static/avatar/2.jpg",
+        "password": "rhein777"
+      },
+      {
+        "name": "Pieter",
+        "email": "pieter.claes@example.com",
+        "avatarUrl": "https://16.design.htmlacademy.pro/static/avatar/7.jpg",
+        "password": "waffle01"
+      },
+      {
+        "name": "Hanna",
+        "email": "hanna.schulz@example.com",
+        "avatarUrl": "",
+        "password": "elbe2025"
+      }
+    ]
+  }
+}

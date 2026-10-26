@@ -1,22 +1,23 @@
-import { readFileSync } from 'node:fs';
+import { createReadStream } from 'node:fs';
 import { resolve } from 'node:path';
+import { createInterface } from 'node:readline';
 
-const ROW_SEPARATOR = /\r?\n/;
 const COLUMN_SEPARATOR = '\t';
+const CHUNK_SIZE = 64 * 1024;
 
 export class TsvFileReader {
-  private content = '';
-
   constructor(private readonly filePath: string) {}
 
-  public read(): void {
-    this.content = readFileSync(resolve(this.filePath), { encoding: 'utf-8' });
-  }
+  public async *readRows(): AsyncGenerator<string[]> {
+    const lines = createInterface({
+      input: createReadStream(resolve(this.filePath), { encoding: 'utf-8', highWaterMark: CHUNK_SIZE }),
+      crlfDelay: Infinity,
+    });
 
-  public getRows(): string[][] {
-    return this.content
-      .split(ROW_SEPARATOR)
-      .filter((row) => row.trim().length > 0)
-      .map((row) => row.split(COLUMN_SEPARATOR));
+    for await (const line of lines) {
+      if (line.trim().length > 0) {
+        yield line.split(COLUMN_SEPARATOR);
+      }
+    }
   }
 }

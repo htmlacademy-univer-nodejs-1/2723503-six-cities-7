@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { CliApplication } from './cli/cli-application.js';
-import { HelpCommand, ImportCommand, VersionCommand } from './cli/commands/index.js';
+import { GenerateCommand, HelpCommand, ImportCommand, VersionCommand } from './cli/commands/index.js';
 
 function bootstrap(): Promise<void> {
   const cliApplication = new CliApplication();
@@ -9,6 +9,7 @@ function bootstrap(): Promise<void> {
     new HelpCommand(),
     new VersionCommand(),
     new ImportCommand(),
+    new GenerateCommand(),
   );
 
   return cliApplication.run(process.argv.slice(2));

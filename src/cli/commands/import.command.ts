@@ -7,15 +7,15 @@ import { CliCommand } from './cli-command.interface.js';
 export class ImportCommand implements CliCommand {
   public readonly name = '--import';
 
-  private printOffer(offer: Offer, index: number): void {
+  private printOffer(offer: Offer, position: number): void {
     const premiumMark = offer.isPremium ? ` ${chalk.bgYellow.black(' PREMIUM ')}` : '';
 
-    console.info(`${chalk.gray(`${index + 1}.`)} ${chalk.bold(offer.title)}${premiumMark}`);
-    console.info(`   ${chalk.cyan(offer.city)} · ${offer.housingType} · ${chalk.green(`€${offer.price}`)} · ★ ${offer.rating}`);
-    console.info(`   ${chalk.gray('автор:')} ${offer.author.name} <${offer.author.email}> (${offer.author.type})`);
+    console.info(
+      `${chalk.gray(`${position}.`)} ${chalk.bold(offer.title)}${premiumMark} · ${chalk.cyan(offer.city)} · ${offer.housingType} · ${chalk.green(`€${offer.price}`)} · ★ ${offer.rating} · ${chalk.gray(offer.author.email)}`
+    );
   }
 
-  public execute(...params: string[]): void {
+  public async execute(...params: string[]): Promise<void> {
     const [filePath] = params;
 
     if (!filePath) {
@@ -23,21 +23,25 @@ export class ImportCommand implements CliCommand {
       return;
     }
 
-    try {
-      const reader = new TsvFileReader(filePath.trim());
-      reader.read();
+    const reader = new TsvFileReader(filePath.trim());
+    let importedCount = 0;
 
-      const offers = reader.getRows().map((columns, rowIndex) => {
+    try {
+      for await (const columns of reader.readRows()) {
+        let offer: Offer;
+
         try {
-          return parseOffer(columns);
+          offer = parseOffer(columns);
         } catch (error) {
           const reason = error instanceof Error ? error.message : String(error);
-          throw new Error(`Строка ${rowIndex + 1}: ${reason}`);
+          throw new Error(`Запись ${importedCount + 1}: ${reason}`);
         }
-      });
 
-      console.info(chalk.green(`Импортировано предложений: ${offers.length}\n`));
-      offers.forEach((offer, index) => this.printOffer(offer, index));
+        importedCount++;
+        this.printOffer(offer, importedCount);
+      }
+
+      console.info(chalk.green(`\nИмпортировано предложений: ${importedCount}`));
     } catch (error) {
       console.error(chalk.red(`Не удалось импортировать данные из файла «${filePath}»`));
 

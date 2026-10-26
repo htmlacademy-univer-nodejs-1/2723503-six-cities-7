@@ -13,3 +13,6 @@ coverage
 # generated test data
 mocks/*.tsv
 !mocks/offers.tsv
+
+# environment
+.env

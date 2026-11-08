@@ -5,6 +5,7 @@ import { MongoDatabaseClient } from '../../shared/libs/database-client/mongo.dat
 import { TsvFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
 import { Logger } from '../../shared/libs/logger/logger.interface.js';
 import { PinoLogger } from '../../shared/libs/logger/pino.logger.js';
+import { CommentModel } from '../../shared/modules/comment/index.js';
 import { DefaultOfferService, OfferModel, OfferService } from '../../shared/modules/offer/index.js';
 import { DefaultUserService, UserModel, UserService } from '../../shared/modules/user/index.js';
 import { Offer } from '../../shared/types/index.js';
@@ -22,7 +23,7 @@ export class ImportCommand implements CliCommand {
     this.logger = new PinoLogger();
     this.databaseClient = new MongoDatabaseClient(this.logger);
     this.userService = new DefaultUserService(UserModel);
-    this.offerService = new DefaultOfferService(OfferModel);
+    this.offerService = new DefaultOfferService(OfferModel, CommentModel);
   }
 
   private async saveOffer(offer: Offer, salt: string): Promise<void> {

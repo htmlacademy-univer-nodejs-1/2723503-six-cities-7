@@ -1,5 +1,6 @@
-import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
 import { User, UserType } from '../../types/index.js';
+import type { OfferEntity } from '../offer/offer.entity.js';
 
 @modelOptions({
   schemaOptions: {
@@ -22,6 +23,10 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
   @prop({ required: true, type: () => String })
   public type!: UserType;
+
+  // Ссылка по имени модели: offer.entity импортирует user.entity, прямой импорт класса дал бы циклическую зависимость
+  @prop({ ref: 'OfferEntity', default: [] })
+  public favorites!: Ref<OfferEntity>[];
 }
 
 export const UserModel = getModelForClass(UserEntity);

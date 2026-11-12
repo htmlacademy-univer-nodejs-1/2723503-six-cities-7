@@ -328,20 +328,14 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
 
-  /users/{userId}/avatar:
+  /users/avatar:
     post:
       tags:
         - users
       summary: Загрузка аватара пользователя
-      description: Загружает изображение пользователя в формате .jpg или .png.
-      parameters:
-        - name: userId
-          in: path
-          description: Идентификатор пользователя
-          required: true
-          schema:
-            type: string
-            example: 6af0c14f14fcb84e236b89a9
+      description: Загружает изображение текущего пользователя в формате .jpg или .png. Доступно только авторизованным клиентам.
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -371,8 +365,8 @@ paths:
                     example: V1StGXR8_Z5jdHi6B-myT.png
         '400':
           $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /users/login:
     post:

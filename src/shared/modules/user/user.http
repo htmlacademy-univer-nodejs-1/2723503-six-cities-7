@@ -1,8 +1,10 @@
 @baseUrl = http://localhost:4000
-@userId = 6af0c14f14fcb84e236b89a9
+# Токен из ответа POST /users/login
+@token = <token>
 
 ## Загрузка аватара пользователя
-POST {{baseUrl}}/users/{{userId}}/avatar HTTP/1.1
+POST {{baseUrl}}/users/avatar HTTP/1.1
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=----SixCitiesFormBoundary
 
 ------SixCitiesFormBoundary

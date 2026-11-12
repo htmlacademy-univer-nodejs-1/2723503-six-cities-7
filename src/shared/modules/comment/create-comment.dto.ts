@@ -1,4 +1,4 @@
-import { IsMongoId, IsNumber, IsString, Length, Max, Min } from 'class-validator';
+import { IsNumber, IsString, Length, Max, Min } from 'class-validator';
 
 export class CreateCommentDto {
   @IsString()
@@ -10,7 +10,7 @@ export class CreateCommentDto {
   @Max(5)
   public rating!: number;
 
-  @IsMongoId()
+  // Определяется по токену авторизованного пользователя, а не передаётся клиентом
   public authorId!: string;
 
   // Берётся из параметра маршрута, а не из тела запроса

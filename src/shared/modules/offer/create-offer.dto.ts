@@ -9,7 +9,6 @@ import {
   IsInt,
   IsLatitude,
   IsLongitude,
-  IsMongoId,
   IsNumber,
   IsString,
   IsUrl,
@@ -85,7 +84,7 @@ export class CreateOfferDto {
   @IsIn(AMENITIES, { each: true })
   public amenities!: Amenity[];
 
-  @IsMongoId()
+  // Определяется по токену авторизованного пользователя, а не передаётся клиентом
   public authorId!: string;
 
   @ValidateNested()

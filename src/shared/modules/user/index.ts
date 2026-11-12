@@ -1,6 +1,7 @@
 export * from './create-user.dto.js';
 export * from './default-user.service.js';
 export * from './login-user.dto.js';
+export * from './rdo/auth-token.rdo.js';
 export * from './rdo/upload-user-avatar.rdo.js';
 export * from './rdo/user.rdo.js';
 export * from './update-user.dto.js';

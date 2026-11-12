@@ -21,10 +21,6 @@ export class DefaultUserService implements UserService {
     return this.userModel.findById(id).exec();
   }
 
-  public async exists(documentId: string): Promise<boolean> {
-    return (await this.userModel.exists({ _id: documentId })) !== null;
-  }
-
   public findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findOne({ email }).exec();
   }

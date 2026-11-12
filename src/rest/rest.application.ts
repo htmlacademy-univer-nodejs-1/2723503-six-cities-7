@@ -5,7 +5,7 @@ import { Config } from '../shared/libs/config/config.interface.js';
 import { RestSchema } from '../shared/libs/config/rest.schema.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { Logger } from '../shared/libs/logger/logger.interface.js';
-import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
+import { Controller, ExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
 import { Component } from '../shared/types/index.js';
 
 @injectable()
@@ -38,6 +38,9 @@ export class RestApplication {
   private async initMiddleware(): Promise<void> {
     this.server.use(express.json());
     this.server.use('/upload', express.static(this.config.get('UPLOAD_DIRECTORY')));
+
+    const parseTokenMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
+    this.server.use(parseTokenMiddleware.execute.bind(parseTokenMiddleware));
   }
 
   private async initControllers(): Promise<void> {

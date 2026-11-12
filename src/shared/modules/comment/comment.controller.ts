@@ -5,10 +5,11 @@ import {
   BaseController,
   DocumentExistsMiddleware,
   HttpMethod,
+  PrivateRouteMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
-import { Component } from '../../types/index.js';
+import { Component, TokenPayload } from '../../types/index.js';
 import { OfferService } from '../offer/offer-service.interface.js';
 import { CommentService } from './comment-service.interface.js';
 import { CreateCommentDto } from './create-comment.dto.js';
@@ -40,6 +41,7 @@ export class CommentController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(CreateCommentDto),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
@@ -53,8 +55,12 @@ export class CommentController extends BaseController {
     this.ok(res, fillDTO(CommentRdo, comments));
   }
 
-  public async create({ params, body }: Request<ParamOfferId, unknown, CreateCommentDto>, res: Response): Promise<void> {
-    const comment = await this.commentService.create({ ...body, offerId: params.offerId });
+  public async create({ params, body, tokenPayload }: Request<ParamOfferId, unknown, CreateCommentDto>, res: Response): Promise<void> {
+    const comment = await this.commentService.create({
+      ...body,
+      authorId: (tokenPayload as TokenPayload).id,
+      offerId: params.offerId,
+    });
 
     this.created(res, fillDTO(CommentRdo, comment));
   }

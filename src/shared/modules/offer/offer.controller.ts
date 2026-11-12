@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { fillDTO } from '../../helpers/common.js';
 import {
   BaseController,
   DocumentExistsMiddleware,
+  HttpError,
   HttpMethod,
   PrivateRouteMiddleware,
   ValidateDtoMiddleware,
@@ -89,6 +91,12 @@ export class OfferController extends BaseController {
     });
   }
 
+  private async checkAuthor(offerId: string, tokenPayload?: TokenPayload): Promise<void> {
+    if (!await this.offerService.isAuthor(offerId, (tokenPayload as TokenPayload).id)) {
+      throw new HttpError(StatusCodes.FORBIDDEN, `Offer with id ${offerId} belongs to another user`, 'OfferController');
+    }
+  }
+
   private async getFavoriteIds(tokenPayload?: TokenPayload): Promise<string[]> {
     if (!tokenPayload) {
       return [];
@@ -142,12 +150,14 @@ export class OfferController extends BaseController {
   }
 
   public async update({ params, body, tokenPayload }: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+    await this.checkAuthor(params.offerId, tokenPayload);
     const offer = await this.offerService.updateById(params.offerId, body);
 
     this.ok(res, this.toOfferRdo(offer, await this.getFavoriteIds(tokenPayload)));
   }
 
-  public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async delete({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
+    await this.checkAuthor(params.offerId, tokenPayload);
     await this.offerService.deleteById(params.offerId);
 
     this.noContent(res);

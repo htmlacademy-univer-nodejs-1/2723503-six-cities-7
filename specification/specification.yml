@@ -362,7 +362,7 @@ paths:
                 properties:
                   avatarUrl:
                     type: string
-                    example: V1StGXR8_Z5jdHi6B-myT.png
+                    example: /upload/V1StGXR8_Z5jdHi6B-myT.png
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -533,9 +533,8 @@ components:
           example: margo.dubois@example.com
         avatarUrl:
           type: string
-          format: uri
-          description: Ссылка на аватар. Если пользователь не загрузил аватар, возвращается изображение по умолчанию.
-          example: https://16.design.htmlacademy.pro/static/avatar/4.jpg
+          description: Ссылка на аватар. Если пользователь не загрузил аватар, возвращается изображение по умолчанию (`/static/default-avatar.svg`).
+          example: /upload/V1StGXR8_Z5jdHi6B-myT.png
         type:
           $ref: '#/components/schemas/UserType'
 

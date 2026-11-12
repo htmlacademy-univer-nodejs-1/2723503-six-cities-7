@@ -1,4 +1,5 @@
 import { Expose } from 'class-transformer';
+import { DEFAULT_AVATAR_PATH } from '../../../constants/static.constant.js';
 import { UserType } from '../../../types/index.js';
 
 export class UserRdo {
@@ -12,7 +13,7 @@ export class UserRdo {
   public email!: string;
 
   @Expose()
-  public avatarUrl?: string;
+  public avatarUrl = DEFAULT_AVATAR_PATH;
 
   @Expose()
   public type!: UserType;

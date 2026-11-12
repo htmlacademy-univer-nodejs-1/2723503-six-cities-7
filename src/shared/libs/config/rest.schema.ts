@@ -2,6 +2,14 @@ import convict from 'convict';
 import validator from 'convict-format-with-validator';
 
 convict.addFormats(validator);
+convict.addFormat({
+  name: 'non-empty-string',
+  validate: (value: unknown) => {
+    if (typeof value !== 'string' || value.trim().length === 0) {
+      throw new Error('must be a non-empty string');
+    }
+  },
+});
 
 export type RestSchema = {
   PORT: number;
@@ -12,6 +20,7 @@ export type RestSchema = {
   DB_NAME: string;
   SALT: string;
   UPLOAD_DIRECTORY: string;
+  STATIC_DIRECTORY: string;
   JWT_SECRET: string;
 };
 
@@ -36,37 +45,43 @@ export const configRestSchema = convict<RestSchema>({
   },
   DB_USER: {
     doc: 'Username to connect to the database',
-    format: String,
+    format: 'non-empty-string',
     env: 'DB_USER',
     default: null,
   },
   DB_PASSWORD: {
     doc: 'Password to connect to the database',
-    format: String,
+    format: 'non-empty-string',
     env: 'DB_PASSWORD',
     default: null,
   },
   DB_NAME: {
     doc: 'Database name',
-    format: String,
+    format: 'non-empty-string',
     env: 'DB_NAME',
     default: null,
   },
   SALT: {
     doc: 'Salt for password hashing',
-    format: String,
+    format: 'non-empty-string',
     env: 'SALT',
     default: null,
   },
   UPLOAD_DIRECTORY: {
     doc: 'Directory for files uploaded by clients',
-    format: String,
+    format: 'non-empty-string',
     env: 'UPLOAD_DIRECTORY',
+    default: null,
+  },
+  STATIC_DIRECTORY: {
+    doc: 'Directory with static files of the service (default avatar)',
+    format: 'non-empty-string',
+    env: 'STATIC_DIRECTORY',
     default: null,
   },
   JWT_SECRET: {
     doc: 'Secret for signing JWT tokens',
-    format: String,
+    format: 'non-empty-string',
     env: 'JWT_SECRET',
     default: null,
   },

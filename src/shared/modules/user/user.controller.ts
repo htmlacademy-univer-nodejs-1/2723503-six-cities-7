@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { fillDTO } from '../../helpers/common.js';
+import { STATIC_UPLOAD_ROUTE } from '../../constants/static.constant.js';
 import { createJWT } from '../../helpers/jwt.js';
 import { Config } from '../../libs/config/config.interface.js';
 import { RestSchema } from '../../libs/config/rest.schema.js';
@@ -60,7 +61,11 @@ export class UserController extends BaseController {
     });
   }
 
-  public async create({ body }: Request<unknown, unknown, CreateUserDto>, res: Response): Promise<void> {
+  public async create({ body, tokenPayload }: Request<unknown, unknown, CreateUserDto>, res: Response): Promise<void> {
+    if (tokenPayload) {
+      throw new HttpError(StatusCodes.FORBIDDEN, 'Only anonymous clients can register', 'UserController');
+    }
+
     const existsUser = await this.userService.findByEmail(body.email);
 
     if (existsUser) {
@@ -99,8 +104,9 @@ export class UserController extends BaseController {
       throw new HttpError(StatusCodes.BAD_REQUEST, 'Avatar file is required', 'UserController');
     }
 
-    await this.userService.updateById((tokenPayload as TokenPayload).id, { avatarUrl: file.filename });
+    const avatarUrl = `${STATIC_UPLOAD_ROUTE}/${file.filename}`;
+    await this.userService.updateById((tokenPayload as TokenPayload).id, { avatarUrl });
 
-    this.created(res, fillDTO(UploadUserAvatarRdo, { avatarUrl: file.filename }));
+    this.created(res, fillDTO(UploadUserAvatarRdo, { avatarUrl }));
   }
 }

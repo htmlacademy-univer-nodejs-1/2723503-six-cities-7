@@ -1,5 +1,7 @@
+import cors from 'cors';
 import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
+import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from '../shared/constants/static.constant.js';
 import { getMongoURI } from '../shared/helpers/database.js';
 import { Config } from '../shared/libs/config/config.interface.js';
 import { RestSchema } from '../shared/libs/config/rest.schema.js';
@@ -36,8 +38,10 @@ export class RestApplication {
   }
 
   private async initMiddleware(): Promise<void> {
+    this.server.use(cors());
     this.server.use(express.json());
-    this.server.use('/upload', express.static(this.config.get('UPLOAD_DIRECTORY')));
+    this.server.use(STATIC_UPLOAD_ROUTE, express.static(this.config.get('UPLOAD_DIRECTORY')));
+    this.server.use(STATIC_FILES_ROUTE, express.static(this.config.get('STATIC_DIRECTORY')));
 
     const parseTokenMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
     this.server.use(parseTokenMiddleware.execute.bind(parseTokenMiddleware));

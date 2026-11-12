@@ -10,6 +10,7 @@ export interface OfferService extends DocumentExists {
   find(limit?: number): Promise<DocumentType<OfferEntity>[]>;
   findPremiumByCity(city: CityName): Promise<DocumentType<OfferEntity>[]>;
   findByIds(ids: string[]): Promise<DocumentType<OfferEntity>[]>;
+  isAuthor(offerId: string, userId: string): Promise<boolean>;
   updateById(id: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   deleteById(id: string): Promise<DocumentType<OfferEntity> | null>;
   incCommentsCount(id: string): Promise<DocumentType<OfferEntity> | null>;

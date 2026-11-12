@@ -25,6 +25,10 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.findById(id).populate('authorId').exec();
   }
 
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel.exists({ _id: documentId })) !== null;
+  }
+
   public find(limit = DEFAULT_OFFERS_LIMIT): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find()

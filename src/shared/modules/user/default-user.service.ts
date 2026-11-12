@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { createSHA256 } from '../../helpers/hash.js';
 import { Component } from '../../types/index.js';
 import { CreateUserDto } from './create-user.dto.js';
+import { UpdateUserDto } from './update-user.dto.js';
 import { UserService } from './user-service.interface.js';
 import { UserEntity } from './user.entity.js';
 
@@ -20,6 +21,10 @@ export class DefaultUserService implements UserService {
     return this.userModel.findById(id).exec();
   }
 
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.userModel.exists({ _id: documentId })) !== null;
+  }
+
   public findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findOne({ email }).exec();
   }
@@ -32,6 +37,10 @@ export class DefaultUserService implements UserService {
     }
 
     return user;
+  }
+
+  public updateById(id: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
   public addToFavorites(userId: string, offerId: string): Promise<DocumentType<UserEntity> | null> {

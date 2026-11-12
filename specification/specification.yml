@@ -307,12 +307,9 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/CreateUser'
-            encoding:
-              avatar:
-                contentType: image/png, image/jpeg
       responses:
         '201':
           description: Пользователь создан
@@ -330,6 +327,52 @@ paths:
                 $ref: '#/components/schemas/Error'
         '409':
           $ref: '#/components/responses/Conflict'
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузка аватара пользователя
+      description: Загружает изображение пользователя в формате .jpg или .png.
+      parameters:
+        - name: userId
+          in: path
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: string
+            example: 6af0c14f14fcb84e236b89a9
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - avatar
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: Изображение пользователя в формате .jpg или .png
+            encoding:
+              avatar:
+                contentType: image/png, image/jpeg
+      responses:
+        '201':
+          description: Аватар загружен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatarUrl:
+                    type: string
+                    example: V1StGXR8_Z5jdHi6B-myT.png
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /users/login:
     post:
@@ -526,10 +569,11 @@ components:
           example: secret123
         type:
           $ref: '#/components/schemas/UserType'
-        avatar:
+        avatarUrl:
           type: string
-          format: binary
+          pattern: '\.(jpg|png)$'
           description: Изображение пользователя в формате .jpg или .png
+          example: avatar.jpg
 
     Login:
       type: object

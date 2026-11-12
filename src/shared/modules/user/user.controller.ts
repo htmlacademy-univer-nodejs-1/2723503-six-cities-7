@@ -4,12 +4,27 @@ import { inject, injectable } from 'inversify';
 import { fillDTO } from '../../helpers/common.js';
 import { Config } from '../../libs/config/config.interface.js';
 import { RestSchema } from '../../libs/config/rest.schema.js';
-import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware } from '../../libs/rest/index.js';
+import {
+  BaseController,
+  DocumentExistsMiddleware,
+  HttpError,
+  HttpMethod,
+  UploadFileMiddleware,
+  ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
+} from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { CreateUserDto } from './create-user.dto.js';
 import { LoginUserDto } from './login-user.dto.js';
+import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { UserService } from './user-service.interface.js';
+
+const AVATAR_MIME_TYPES = ['image/jpeg', 'image/png'];
+
+type ParamUserId = {
+  userId: string;
+};
 
 @injectable()
 export class UserController extends BaseController {
@@ -32,6 +47,16 @@ export class UserController extends BaseController {
       middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
     });
     this.addRoute({ path: '/check', method: HttpMethod.Get, handler: this.checkAuthenticate });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(this.config.get('UPLOAD_DIRECTORY'), 'avatar', AVATAR_MIME_TYPES),
+        new DocumentExistsMiddleware(this.userService, 'User', 'userId'),
+      ],
+    });
   }
 
   public async create({ body }: Request<unknown, unknown, CreateUserDto>, res: Response): Promise<void> {
@@ -58,5 +83,15 @@ export class UserController extends BaseController {
 
   public async checkAuthenticate(_req: Request, _res: Response): Promise<void> {
     throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Authentication check is not implemented yet', 'UserController');
+  }
+
+  public async uploadAvatar({ params, file }: Request<ParamUserId>, res: Response): Promise<void> {
+    if (!file) {
+      throw new HttpError(StatusCodes.BAD_REQUEST, 'Avatar file is required', 'UserController');
+    }
+
+    await this.userService.updateById(params.userId, { avatarUrl: file.filename });
+
+    this.created(res, fillDTO(UploadUserAvatarRdo, { avatarUrl: file.filename }));
   }
 }

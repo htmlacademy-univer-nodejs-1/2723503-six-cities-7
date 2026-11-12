@@ -16,3 +16,6 @@ mocks/*.tsv
 
 # environment
 .env
+
+# files uploaded by clients
+upload/

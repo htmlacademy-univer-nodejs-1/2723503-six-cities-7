@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import 'reflect-metadata';
 import { CliApplication } from './cli/cli-application.js';
 import { GenerateCommand, HelpCommand, ImportCommand, VersionCommand } from './cli/commands/index.js';
 

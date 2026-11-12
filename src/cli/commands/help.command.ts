@@ -4,7 +4,7 @@ import { CliCommand } from './cli-command.interface.js';
 const COMMANDS_DESCRIPTION: ReadonlyArray<[usage: string, description: string]> = [
   ['--version', 'выводит номер версии приложения'],
   ['--help', 'печатает этот текст'],
-  ['--import <path>', 'импортирует данные из TSV-файла'],
+  ['--import <path> <db-uri> <salt>', 'импортирует данные из TSV-файла в MongoDB'],
   ['--generate <n> <path> <url>', 'генерирует произвольное количество тестовых данных'],
 ];
 

@@ -14,7 +14,11 @@ export abstract class BaseController implements Controller {
   }
 
   public addRoute(route: Route): void {
-    this._router[route.method](route.path, asyncHandler(route.handler.bind(this)));
+    const middlewareHandlers = route.middlewares?.map(
+      (middleware) => asyncHandler(middleware.execute.bind(middleware))
+    ) ?? [];
+
+    this._router[route.method](route.path, ...middlewareHandlers, asyncHandler(route.handler.bind(this)));
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {

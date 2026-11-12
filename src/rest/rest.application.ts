@@ -19,6 +19,7 @@ export class RestApplication {
     @inject(Component.OfferController) private readonly offerController: Controller,
     @inject(Component.FavoriteController) private readonly favoriteController: Controller,
     @inject(Component.UserController) private readonly userController: Controller,
+    @inject(Component.CommentController) private readonly commentController: Controller,
     @inject(Component.ExceptionFilter) private readonly exceptionFilter: ExceptionFilter,
   ) {}
 
@@ -40,6 +41,7 @@ export class RestApplication {
 
   private async initControllers(): Promise<void> {
     this.server.use('/offers', this.offerController.router);
+    this.server.use('/offers', this.commentController.router);
     this.server.use('/favorites', this.favoriteController.router);
     this.server.use('/users', this.userController.router);
   }

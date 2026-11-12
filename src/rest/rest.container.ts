@@ -6,7 +6,9 @@ import { DatabaseClient } from '../shared/libs/database-client/database-client.i
 import { MongoDatabaseClient } from '../shared/libs/database-client/mongo.database-client.js';
 import { Logger } from '../shared/libs/logger/logger.interface.js';
 import { PinoLogger } from '../shared/libs/logger/pino.logger.js';
+import { AppExceptionFilter, ExceptionFilter } from '../shared/libs/rest/index.js';
 import { commentContainerModule } from '../shared/modules/comment/index.js';
+import { favoriteContainerModule } from '../shared/modules/favorite/index.js';
 import { offerContainerModule } from '../shared/modules/offer/index.js';
 import { userContainerModule } from '../shared/modules/user/index.js';
 import { Component } from '../shared/types/index.js';
@@ -19,8 +21,9 @@ export function createRestContainer(): Container {
   container.bind<Logger>(Component.Logger).to(PinoLogger).inSingletonScope();
   container.bind<Config<RestSchema>>(Component.Config).to(RestConfig).inSingletonScope();
   container.bind<DatabaseClient>(Component.DatabaseClient).to(MongoDatabaseClient).inSingletonScope();
+  container.bind<ExceptionFilter>(Component.ExceptionFilter).to(AppExceptionFilter).inSingletonScope();
 
-  container.load(userContainerModule, offerContainerModule, commentContainerModule);
+  container.load(userContainerModule, offerContainerModule, commentContainerModule, favoriteContainerModule);
 
   return container;
 }

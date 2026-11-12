@@ -23,4 +23,26 @@ export class DefaultUserService implements UserService {
   public findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findOne({ email }).exec();
   }
+
+  public async verifyUser(email: string, password: string, salt: string): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.findByEmail(email);
+
+    if (!user || user.password !== createSHA256(password, salt)) {
+      return null;
+    }
+
+    return user;
+  }
+
+  public addToFavorites(userId: string, offerId: string): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel
+      .findByIdAndUpdate(userId, { $addToSet: { favorites: offerId } }, { new: true })
+      .exec();
+  }
+
+  public removeFromFavorites(userId: string, offerId: string): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel
+      .findByIdAndUpdate(userId, { $pull: { favorites: offerId } }, { new: true })
+      .exec();
+  }
 }

@@ -6,6 +6,7 @@ import { DatabaseClient } from '../shared/libs/database-client/database-client.i
 import { MongoDatabaseClient } from '../shared/libs/database-client/mongo.database-client.js';
 import { Logger } from '../shared/libs/logger/logger.interface.js';
 import { PinoLogger } from '../shared/libs/logger/pino.logger.js';
+import { commentContainerModule } from '../shared/modules/comment/index.js';
 import { offerContainerModule } from '../shared/modules/offer/index.js';
 import { userContainerModule } from '../shared/modules/user/index.js';
 import { Component } from '../shared/types/index.js';
@@ -19,7 +20,7 @@ export function createRestContainer(): Container {
   container.bind<Config<RestSchema>>(Component.Config).to(RestConfig).inSingletonScope();
   container.bind<DatabaseClient>(Component.DatabaseClient).to(MongoDatabaseClient).inSingletonScope();
 
-  container.load(userContainerModule, offerContainerModule);
+  container.load(userContainerModule, offerContainerModule, commentContainerModule);
 
   return container;
 }
